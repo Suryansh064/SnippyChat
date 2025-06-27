@@ -37,7 +37,7 @@ export async function Login(req, res) {
         });
 
         // Set cookie
-        res.cookie("jwt", token, {
+        res.cookie("token", token, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: true,
             sameSite: "strict",
@@ -46,7 +46,7 @@ export async function Login(req, res) {
 
         const { password: _, ...userData } = existUser._doc;
 
-        res.status(200).json({ success: true, user: userData });
+        res.status(200).json({ success: true, user: userData,token });
 
     } catch (error) {
         console.log("Error in login", error);

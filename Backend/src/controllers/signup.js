@@ -57,7 +57,7 @@ export async function signup(req, res) {
         });
 
         // Set JWT cookie
-        res.cookie("jwt", token, {
+        res.cookie("token", token, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: true,
             sameSite: "strict",
@@ -66,7 +66,7 @@ export async function signup(req, res) {
 
         const { password: _, ...userData } = newUser._doc;
 
-        res.status(201).json({ success: true, user: userData });
+        res.status(201).json({ success: true, user: userData,token });
     } catch (error) {
         console.error("Error in signup:", error);
         res.status(500).json({ message: "Error in server signup" });

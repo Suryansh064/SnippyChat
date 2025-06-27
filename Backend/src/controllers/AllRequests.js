@@ -85,38 +85,42 @@ export async function sendRequest(req,res) {
         return res.status(400).json({message :"Internal Server Error"});
     }
 }
-export async function getFriendRequest(req,res){
+export async function getFriendRequest(req, res) {
     try {
-        const incomingRequest = FriendRequest.find({
-            receiver :req.user.id,
-            status:"pending",
-        }).populate("sender","fullName profilePic nativeLanguage learningLanguage");
+    const incomingRequest = await FriendRequest.find({
+        receiver: req.user.id,
+        status: "pending",
+    }).populate("sender", "fullName profilePic nativeLanguage learningLanguage");
 
-        const AcceptedRequest = FriendRequest.find({
-            sender :req.user.id,
-            status:"accepted",
-        }).populate("receiver","fullName profilePic");
+    const acceptedRequest = await FriendRequest.find({
+        sender: req.user.id,
+        status: "accepted",
+    }).populate("receiver", "fullName profilePic");
 
-        res.status(200).json(incomingRequest,AcceptedRequest);
-
+    res.status(200).json({
+        incoming: incomingRequest,
+        accepted: acceptedRequest,
+    });
     } catch (error) {
-        console.log("Error in Get Friend Request Controller");
-        res.status(500).json({message :"Internal Server Error"});
+    console.log("Error in Get Friend Request Controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+}
+}
+
+
+export async function getSendRequest(req, res) {
+    try {
+    const outGoingRequest = await FriendRequest.find({
+        sender: req.user.id,
+        status: "pending",
+    }).populate("receiver", "fullName profilePic nativeLanguage learningLanguage"); // populate 'receiver' not 'sender'
+
+    res.status(200).json(outGoingRequest);
+    } catch (error) {
+    console.log("Error in Get OutGoing Friend Request Controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
     }
 }
 
-export async function getSendRequest(req,res){
-    try {
-        const outGoingRequest = FriendRequest.find({
-            sender :req.user.id,
-            status:"pending",
-        }).populate("sender","fullName profilePic nativeLanguage learningLanguage");
-        res.status(200).json(outGoingRequest);
-
-    } catch (error) {
-        console.log("Error in Get  OutGoing Friend Request Controller");
-        res.status(500).json({message :"Internal Server Error"});
-    }
-}
 
 
