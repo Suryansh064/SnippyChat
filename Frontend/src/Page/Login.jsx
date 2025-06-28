@@ -19,13 +19,12 @@ const Login = () => {
       const res = await axios.post("http://localhost:5001/api/auth/login", loginData ,{
       withCredentials: true
     });
-      console.log(loginData);
       localStorage.setItem("token", res.data.token);
       if (res.data.user && res.data.user._id) {
       localStorage.setItem("userId", res.data.user._id);
       localStorage.setItem("authUser", JSON.stringify(res.data.user));
     }
-      Navigate("/");
+          Navigate("/");
     } catch (err) {
       setError("Login failed. Please try again.");
     }
@@ -93,7 +92,7 @@ const Login = () => {
                   <div className="text-center mt-4">
                     <p className="text-sm">
                       Don't have an account?{" "}
-                      <Link to="/signin" className="text-primary hover:underline">
+                      <Link to="/signup" className="text-primary hover:underline">
                         Create one
                       </Link>
                     </p>

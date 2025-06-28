@@ -26,7 +26,6 @@ const SignUp = () => {
     }
     localStorage.setItem("authUser", JSON.stringify(res.data.user));
     navigate("/OnBoard");
-    console.log("Signup data:", signupData);
     })
     }
     catch (err) {

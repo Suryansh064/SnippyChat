@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import 'stream-chat-react/dist/css/v2/index.css'; // For v10+ of stream-chat-react
 import axios from "axios";
+import Navbar from "../components/Navbar";
 import {
   Channel,
   ChannelHeader,
@@ -47,13 +48,11 @@ const ChatPage = () => {
   const [token, setToken] = useState(null);
   const [authUser, setAuthUser] = useState(null);
 
-  // Example: Get authUser from localStorage (adjust as per your auth logic)
   useEffect(() => {
     const user = localStorage.getItem("authUser");
     if (user) setAuthUser(JSON.parse(user));
   }, []);
 
-  // Fetch stream token
   useEffect(() => {
     const fetchToken = async () => {
       if (!authUser) return;
@@ -114,21 +113,21 @@ const ChatPage = () => {
 
   if (loading || !chatClient || !channel) return <ChatLoader />;
   return (
-    <div className="h-[93vh]">
-      <Chat client={chatClient}>
-        <Channel channel={channel}>
-          <div className="w-full relative">
-            <CallButton handleVideoCall={handleVideoCall} />
+  <div className="h-screen  bg-base-200 text-base-content">
+    <Chat client={chatClient}>
+      <Channel channel={channel}>
+        <div className="w-full relative">
+          <CallButton handleVideoCall={handleVideoCall} />
             <Window>
-              <ChannelHeader />
-              <MessageList />
-              <MessageInput focus />
+            <ChannelHeader />
+            <MessageList />
+            <MessageInput focus />
             </Window>
-          </div>
-          <Thread />
-        </Channel>
-      </Chat>
-    </div>
+        </div>
+      <Thread />
+    </Channel>
+  </Chat>
+</div>
   );
 };
 

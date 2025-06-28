@@ -39,9 +39,13 @@ const Home = () => {
 }, []);
 
   useEffect(() => {
-    const ids = new Set(outgoingFriendReqs.map(req => req.recipient._id));
-    setOutgoingRequestsIds(ids);
-  }, [outgoingFriendReqs]);
+  const ids = new Set(
+    outgoingFriendReqs
+      .filter(req => req && req.recipient && req.recipient._id)
+      .map(req => req.recipient._id)
+  );
+  setOutgoingRequestsIds(ids);
+}, [outgoingFriendReqs]);
 
   const sendFriendRequest = async (userId) => {
   setSending(prev => ({ ...prev, [userId]: true }));
@@ -63,26 +67,24 @@ const Home = () => {
           </Link>
         </div>
 
-{loadingFriends ? (
-  <div className="flex justify-center py-12">
-    <span className="loading loading-spinner loading-lg" />
-  </div>
-) : friends.length === 0 ? (
-  <div>No friends found.</div>
-) : (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-    {friends.map(friend => (
-      <div key={friend._id} className="card bg-base-200 p-4 flex flex-col gap-2">
-        <span>{friend.fullName}</span>
-        <Link to={`/chatPage/${friend._id}`} className="btn btn-primary btn-sm mt-2">
-          Chat
-        </Link>
-      </div>
+      {loadingFriends ? (
+        <div className="flex justify-center py-12">
+          <span className="loading loading-spinner loading-lg" />
+        </div>
+          ) : friends.length === 0 ? (
+        <div>No friends found.</div>
+        ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {friends.map(friend => (
+            <div key={friend._id} className="card bg-base-200 p-4 flex flex-col gap-2">
+            <span>{friend.fullName}</span>
+          <Link to={`/chatPage/${friend._id}`} className="btn btn-primary btn-sm mt-2">
+            Chat
+          </Link>
+        </div>
     ))}
   </div>
 )}
-
-
         <section>
           <div className="mb-6 sm:mb-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -107,9 +109,13 @@ const Home = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recommendedUsers.map(user => {
+                if (!user || !user._id) {
+                console.warn(`Skipping invalid user at index ${i}:`, user);
+                return null;
+                }
                 const hasRequestBeenSent = outgoingRequestsIds.has(user._id);
                 return (
-                  <div key={user._id} className="card bg-base-200 hover:shadow-lg">
+                  <div key={user._id} className="card bg-base-300 hover:shadow-lg">
                     <div className="card-body p-5 space-y-4">
                       <div className="flex items-center gap-3">
                         <div className="avatar size-16 rounded-full">
@@ -126,9 +132,9 @@ const Home = () => {
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-1.5">
-                        <span className="badge badge-secondary">Native: {user.nativeLanguage}</span>
-                        <span className="badge badge-outline">Learning: {user.learningLanguage}</span>
+                      <div className="flex flex-row gap-10 ">
+                        <span className="badge badge-outline p-4">Native: {user.nativeLanguage}</span>
+                        <span className="badge badge-outline p-4 ">Learning: {user.learningLanguage}</span>
                       </div>
 
                       {user.bio && <p className="text-sm opacity-70">{user.bio}</p>}
