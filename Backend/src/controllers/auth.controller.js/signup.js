@@ -1,7 +1,7 @@
-import User from "../Models/User.js";
+import User from "../../Models/User.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { upsertStreamUser } from "../lib/stream.js";
+import { upsertStreamUser } from "../../lib/stream.js";
 export async function signup(req, res) {
     const { email, password, fullName } = req.body;
 

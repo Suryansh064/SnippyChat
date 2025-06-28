@@ -1,4 +1,4 @@
-import User from "../Models/User.js";
+import User from "../../Models/User.js";
 export async function getFriend(req,res) {
     try {
         const user = await User.findById(req.user.id).select("Friends").

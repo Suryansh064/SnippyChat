@@ -1,20 +1,20 @@
 import express from "express";
-import { Login } from "../controllers/login.js";
-import { Logout } from "../controllers/logout.js";
-import { signup } from "../controllers/signup.js";
+import Login from "../controllers/auth.controller.js/login.js"
+import { Logout } from "../controllers/auth.controller.js/logout.js"
+import { signup } from "../controllers/auth.controller.js/signup.js"
 import { protectRoute } from "../middleware/auth.middleware.js";
-import { board } from "../controllers/onboard.js";
-const router = express.Router();
+import { board } from "../controllers/auth.controller.js/onboard.js"
+const authRouter = express.Router();
 
-router.post("/signup",signup)
-router.post("/login",Login)
-router.post("/logout",Logout)
+authRouter.post("/signup",signup)
+authRouter.post("/login",Login)
+authRouter.post("/logout",Logout)
 
-router.post("/onBoard",protectRoute, board);
+authRouter.post("/onBoard",protectRoute, board);
 
 
-router.get("/me" ,protectRoute ,(req,res)=>{
+authRouter.get("/me" ,protectRoute ,(req,res)=>{
     res.status(200).json({success :true , user:req.user});
 })
 
-export default router;
+export default authRouter;

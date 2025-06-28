@@ -1,5 +1,5 @@
-import { upsertStreamUser } from "../lib/stream.js";
-import User from "../Models/User.js";
+import { upsertStreamUser } from "../../lib/stream.js";
+import User from "../../Models/User.js";
 
 export  const board = async (req,res)=>{
     try {

@@ -1,8 +1,8 @@
-import User from "../Models/User.js";
+import User from "../../Models/User.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-export async function Login(req, res) {
+async function Login(req, res) {
     const { email, password } = req.body;
 
     try {
@@ -53,3 +53,4 @@ export async function Login(req, res) {
         res.status(500).json({ message: "Error in Server Login" });
     }
 }
+export default Login;

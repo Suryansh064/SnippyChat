@@ -1,5 +1,5 @@
-import FriendRequest from "../Models/FriendRequest.js";
-import User from "../Models/User.js";
+import FriendRequest from "../../Models/FriendRequest.js";
+import User from "../../Models/User.js";
 
 export async function AcceptRequest(req, res) {
     try {
