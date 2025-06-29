@@ -23,7 +23,6 @@ const Home = () => {
 
   axios.get("http://localhost:5001/api/user/", { withCredentials: true })
     .then(res => {
-      console.log("Recommended users response:", res.data);
       if (Array.isArray(res.data)) setRecommendedUsers(res.data);
       else if (res.data && Array.isArray(res.data.users)) setRecommendedUsers(res.data.users);
       else setRecommendedUsers([]);

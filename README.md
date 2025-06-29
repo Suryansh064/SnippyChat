@@ -21,7 +21,7 @@ SnippyChat is a full-stack real-time messaging and video calling platform built 
 
 ## ⚙️ Tech Stack
 
-- **Frontend:** React + Vite + Tailwind CSS + TanStack Query + Zustand  
+- **Frontend:** React + Vite + Tailwind CSS + Axios 
 - **Backend:** Node.js + Express.js + MongoDB + JWT + Stream  
 - **Other Tools:** WebRTC, Socket.IO, Nodemailer, Twilio  
 - **Deployment:** Vercel (Frontend) + Render (Backend)
