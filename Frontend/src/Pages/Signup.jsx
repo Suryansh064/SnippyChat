@@ -16,7 +16,7 @@ const SignUp = () => {
     e.preventDefault();
     setError("");
     try {
-      const res = await axios.post('http://localhost:5001/api/auth/signup', signupData ,{
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/signup`, signupData ,{
       withCredentials: true
     })
     .then(res => {

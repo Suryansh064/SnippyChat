@@ -16,7 +16,7 @@ const Login = () => {
     e.preventDefault();
     setError("");
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/login", loginData ,{
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/login`, loginData ,{
       withCredentials: true
     });
       localStorage.setItem("token", res.data.token);

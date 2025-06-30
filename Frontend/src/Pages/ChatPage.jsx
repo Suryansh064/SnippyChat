@@ -57,7 +57,7 @@ const ChatPage = () => {
     const fetchToken = async () => {
       if (!authUser) return;
       try {
-        const res = await axios.get("http://localhost:5001/api/chat/token", { withCredentials: true });
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/chat/token`, { withCredentials: true });
         setToken(res.data.token);
       } catch (err) {
         setToken(null);

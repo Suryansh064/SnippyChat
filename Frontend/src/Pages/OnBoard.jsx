@@ -17,7 +17,7 @@ const OnBoard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5001/api/auth/onBoard", formState, {
+      await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/onBoard`, formState, {
       withCredentials: true
       
     });

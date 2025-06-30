@@ -13,7 +13,7 @@ const Home = () => {
   const [outgoingRequestsIds, setOutgoingRequestsIds] = useState(new Set());
 
   useEffect(() => {
-  axios.get("http://localhost:5001/api/user/friends", { withCredentials: true })
+  axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/user/friends`, { withCredentials: true })
     .then(res => {
       if (Array.isArray(res.data)) setFriends(res.data);
       else if (res.data && Array.isArray(res.data.Friends)) setFriends(res.data.Friends);
@@ -21,7 +21,7 @@ const Home = () => {
     })
     .finally(() => setLoadingFriends(false));
 
-  axios.get("http://localhost:5001/api/user/", { withCredentials: true })
+  axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/user/`, { withCredentials: true })
     .then(res => {
       if (Array.isArray(res.data)) setRecommendedUsers(res.data);
       else if (res.data && Array.isArray(res.data.users)) setRecommendedUsers(res.data.users);
@@ -29,7 +29,7 @@ const Home = () => {
     })
     .finally(() => setLoadingUsers(false));
 
-  axios.get("http://localhost:5001/api/user/send-friend-req", { withCredentials: true })
+  axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/user/send-friend-req`, { withCredentials: true })
     .then(res => {
       if (Array.isArray(res.data)) setOutgoingFriendReqs(res.data);
       else if (res.data && Array.isArray(res.data.requests)) setOutgoingFriendReqs(res.data.requests);
@@ -49,7 +49,7 @@ const Home = () => {
   const sendFriendRequest = async (userId) => {
   setSending(prev => ({ ...prev, [userId]: true }));
   try {
-    await axios.post(`http://localhost:5001/api/user/friend-req/${userId}`, {}, { withCredentials: true });
+    await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/user/friend-req/${userId}`, {}, { withCredentials: true });
     setOutgoingRequestsIds(prev => new Set(prev).add(userId));
   } catch (e) {}
   setSending(prev => ({ ...prev, [userId]: false }));

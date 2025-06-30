@@ -23,7 +23,7 @@ const Notification = () => {
 
 useEffect(() => {
     setLoading(true);
-    axios.get("http://localhost:5001/api/user/friend-req", { withCredentials: true })
+    axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/user/friend-req`, { withCredentials: true })
     .then(res => {
         if (res.data && typeof res.data === "object") {
         setFriendRequests({
@@ -39,9 +39,9 @@ useEffect(() => {
     const acceptFriendRequest = async (id) => {
     setAccepting(prev => ({ ...prev, [id]: true }));
     try {
-        await axios.put(`http://localhost:5001/api/user/friend-req/${id}/accept`, {}, { withCredentials: true });
+        await axios.put(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/user/friend-req/${id}/accept`, {}, { withCredentials: true });
       // Refresh requests after accepting
-        const res = await axios.get("http://localhost:5001/api/user/friend-req", { withCredentials: true });
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/user/friend-req`, { withCredentials: true });
         if (res.data && typeof res.data === "object") setFriendRequests(res.data);
     } catch (e) {}
     setAccepting(prev => ({ ...prev, [id]: false }));

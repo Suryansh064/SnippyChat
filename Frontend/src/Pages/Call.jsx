@@ -31,7 +31,7 @@ const Call = () => {
       if (!authUser?._id || !callId) return;
 
       try {
-        const res = await axios.get("http://localhost:5001/api/chat/token", { withCredentials: true });
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/chat/token`, { withCredentials: true });
         const token = res.data.token;
         const user = {
           id: authUser._id,
