@@ -1,8 +1,9 @@
+import { useUser } from "../context/UserContext"; 
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router";
 import { useState } from "react";
-import axios from "axios";
 import { LoaderIcon, MapPinIcon, ShipWheelIcon, ShuffleIcon, CameraIcon } from "lucide-react";
 import { LANGUAGES } from "../constants";
-import { useNavigate } from "react-router";
 
 const OnBoard = () => {
   const [formState, setFormState] = useState({
@@ -13,18 +14,24 @@ const OnBoard = () => {
     learningLanguage: "",
     location: "",
   });
+
+  const { user } = useAuth(); 
+  const { onBoard } = useUser(); 
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/onBoard`, formState, {
-      withCredentials: true
-      
-    });
+
+    const payload = {
+      ...formState,
+      userId: user?._id,
+    };
+
+    const res = await onBoard(payload);
+    if (res.success) {
       navigate("/");
-      console.log(formState);
-    } catch (err) {
-      console.log("Error", err);  
+    } else {
+      console.error("Onboarding failed:", res.error);
     }
   };
 

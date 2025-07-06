@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import axios from "axios"
 import {
   StreamVideo,
   StreamVideoClient,
@@ -12,6 +11,8 @@ import {
   useCallStateHooks,
 } from "@stream-io/video-react-sdk";
 
+import { useAuth } from "../context/AuthContext";
+import { useChat } from "../context/ChatContext"; 
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 
 const STREAM_API_KEY = import.meta.env.VITE_ChitChat_API_KEY;
@@ -19,30 +20,26 @@ const STREAM_API_KEY = import.meta.env.VITE_ChitChat_API_KEY;
 const Call = () => {
   const { id: callId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { chatToken } = useChat(); 
 
   const [client, setClient] = useState(null);
   const [call, setCall] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const authUser = JSON.parse(localStorage.getItem("authUser") || "{}");
-
   useEffect(() => {
     const initCall = async () => {
-      if (!authUser?._id || !callId) return;
+      if (!user?._id || !callId || !chatToken) return;
 
       try {
-        const res = await axios.get(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/chat/token`, { withCredentials: true });
-        const token = res.data.token;
-        const user = {
-          id: authUser._id,
-          name: authUser.fullName,
-          image: authUser.profilePic,
-        };
-
         const videoClient = new StreamVideoClient({
           apiKey: STREAM_API_KEY,
-          user,
-          token,
+          user: {
+            id: user._id,
+            name: user.fullName,
+            image: user.profilePic,
+          },
+          token: chatToken,
         });
 
         const callInstance = videoClient.call("default", callId);
@@ -58,7 +55,7 @@ const Call = () => {
     };
 
     initCall();
-  }, [authUser, callId]);
+  }, [user, callId, chatToken]); 
 
   if (isLoading) return <div>Loading...</div>;
 

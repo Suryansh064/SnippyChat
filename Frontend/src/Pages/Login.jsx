@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { ShipWheelIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [loginData, setLoginData] = useState({
@@ -10,23 +8,19 @@ const Login = () => {
     password: "",
   });
   const [error, setError] = useState("");
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
+  const { login } = useAuth(); 
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/login`, loginData ,{
-      withCredentials: true
-    });
-      localStorage.setItem("token", res.data.token);
-      if (res.data.user && res.data.user._id) {
-      localStorage.setItem("userId", res.data.user._id);
-      localStorage.setItem("authUser", JSON.stringify(res.data.user));
-    }
-          Navigate("/");
-    } catch (err) {
-      setError("Login failed. Please try again.");
+
+    const result = await login(loginData.email, loginData.password);
+
+    if (result.success) {
+      navigate("/");
+    } else {
+      setError(result.error);
     }
   };
 
@@ -40,11 +34,6 @@ const Login = () => {
             </span>
           </div>
 
-          {error && (
-            <div className="alert alert-error mb-4">
-              <span>{error}</span>
-            </div>
-          )}
 
           <div className="w-full">
             <form onSubmit={handleLogin}>
@@ -120,4 +109,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

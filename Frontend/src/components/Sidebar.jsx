@@ -1,9 +1,9 @@
 import { Link, useLocation } from "react-router";
-
 import { BellIcon, HomeIcon, ShipWheelIcon, UsersIcon } from "lucide-react";
+import { useAuth } from "../context/AuthContext"; // Adjust the path as necessary
 
 const Sidebar = () => {
-    const authUser = JSON.parse(localStorage.getItem("authUser"));
+    const { user: authUser } = useAuth();
     const location = useLocation();
     const currentPath = location.pathname;
 
@@ -11,9 +11,9 @@ const Sidebar = () => {
     <aside className="w-64 bg-base-200 border-r border-base-300 hidden lg:flex flex-col h-screen sticky top-0">
         <div className="p-5 border-b border-base-300">
         <Link to="/" className="flex items-center gap-2.5">
-            <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary  tracking-wider">
+            <span className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-wider">
             SnippyChat
-    </span>
+            </span>
         </Link>
     </div>
 
@@ -22,7 +22,7 @@ const Sidebar = () => {
             to="/"
             className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
             currentPath === "/" ? "btn-active" : ""
-            }`}
+        }`}
         >
             <HomeIcon className="size-5 text-base-content opacity-70" />
             <span>Home</span>
@@ -44,13 +44,13 @@ const Sidebar = () => {
             currentPath === "/notifications" ? "btn-active" : ""
         }`}
         >
-        <BellIcon className="size-5 text-base-content opacity-70" />
+            <BellIcon className="size-5 text-base-content opacity-70" />
             <span>Notifications</span>
         </Link>
     </nav>
 
       {/* USER PROFILE SECTION */}
-        <div className="p-4 border-t border-base-300 mt-auto">
+    <div className="p-4 border-t border-base-300 mt-auto">
         <div className="flex items-center gap-3">
             <div className="avatar">
             <div className="w-10 rounded-full">
@@ -65,8 +65,9 @@ const Sidebar = () => {
             </p>
             </div>
         </div>
-    </div>
+        </div>
     </aside>
 );
 };
+
 export default Sidebar;
