@@ -19,9 +19,6 @@ export const AuthProvider = ({ children }) => {
           `${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/me`,
           {
             withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
           }
         );
         setUser(res.data.user);
