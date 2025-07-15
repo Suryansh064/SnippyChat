@@ -48,6 +48,7 @@ const ChatPage = () => {
 
         await currChannel.watch();
         setChannel(currChannel);
+        await checkLatency(); 
       } catch (error) {
         console.error("Error initializing chat:", error);
       } finally {

@@ -15,10 +15,16 @@ const OnBoard = () => {
     location: "",
   });
 
-  const { user } = useAuth(); 
-  const { onBoard } = useUser(); 
+  const { user ,loading} = useAuth(); 
+  const { onboard } = useUser(); 
   const navigate = useNavigate();
-
+  if (loading) {
+  return (
+    <div className="h-screen flex items-center justify-center">
+      <span className="loading loading-spinner loading-lg text-primary"></span>
+    </div>
+  );
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -27,7 +33,7 @@ const OnBoard = () => {
       userId: user?._id,
     };
 
-    const res = await onBoard(payload);
+    const res = await onboard(payload);
     if (res.success) {
       navigate("/");
     } else {

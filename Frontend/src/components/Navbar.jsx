@@ -43,7 +43,12 @@ const Navbar = () => {
 
           <div className="avatar">
             <div className="w-9 rounded-full">
-              <img src={authUser?.profilePic} alt="User Avatar" />
+                <img
+                    src={authUser?.profilePic || "/default-avatar.png"}
+                    alt="User Avatar"
+                    className="object-cover w-full h-full"
+                    />
+
             </div>
           </div>
 

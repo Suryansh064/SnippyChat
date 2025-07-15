@@ -3,20 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: "",
-  });
+  const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth(); 
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
     const result = await login(loginData.email, loginData.password);
-
     if (result.success) {
       navigate("/");
     } else {
@@ -34,68 +30,69 @@ const Login = () => {
             </span>
           </div>
 
+          <form onSubmit={handleLogin} className="w-full">
+            <div className="space-y-4 m-6">
+              <div>
+                <h2 className="text-xl font-semibold">Welcome Back</h2>
+                <p className="text-sm opacity-70">
+                  Sign in to your account to continue your language journey
+                </p>
+              </div>
 
-          <div className="w-full">
-            <form onSubmit={handleLogin}>
-              <div className="space-y-4 m-6">
-                <div>
-                  <h2 className="text-xl font-semibold">Welcome Back</h2>
-                  <p className="text-sm opacity-70">
-                    Sign in to your account to continue your language journey
+              <div className="flex flex-col gap-6">
+                <div className="form-control w-full space-y-2">
+                  <label className="label">
+                    <span className="label-text">Email</span>
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="hello@example.com"
+                    className="input input-bordered w-full"
+                    value={loginData.email}
+                    onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="form-control w-full space-y-2">
+                  <label className="label">
+                    <span className="label-text">Password</span>
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    className="input input-bordered w-full"
+                    value={loginData.password}
+                    onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                    required
+                  />
+                </div>
+
+                {error && (
+                  <div className="text-sm text-red-500 mt-2 text-center">{error}</div>
+                )}
+
+                <button type="submit" className="btn btn-primary w-full">
+                  Sign In
+                </button>
+
+                <div className="text-center mt-4">
+                  <p className="text-sm">
+                    Don't have an account?{" "}
+                    <Link to="/signup" className="text-primary hover:underline">
+                      Create one
+                    </Link>
                   </p>
                 </div>
-
-                <div className="flex flex-col gap-10">
-                  <div className="form-control w-full mt-6 space-y-2">
-                    <label className="label">
-                      <span className="label-text">Email</span>
-                    </label>
-                    <input
-                      type="email"
-                      placeholder="hello@example.com"
-                      className="input input-bordered w-full"
-                      value={loginData.email}
-                      onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className="form-control w-full space-y-2">
-                    <label className="label">
-                      <span className="label-text">Password</span>
-                    </label>
-                    <input
-                      type="password"
-                      placeholder="••••••••"
-                      className="input input-bordered w-full"
-                      value={loginData.password}
-                      onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <button type="submit" className="btn btn-primary w-full ">
-                    Sign In
-                  </button>
-
-                  <div className="text-center mt-4">
-                    <p className="text-sm">
-                      Don't have an account?{" "}
-                      <Link to="/signup" className="text-primary hover:underline">
-                        Create one
-                      </Link>
-                    </p>
-                  </div>
-                </div>
               </div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
 
         <div className="hidden lg:flex w-full lg:w-1/2 bg-primary/10 items-center justify-center">
           <div className="max-w-md p-8">
             <div className="relative aspect-square max-w-sm mx-auto">
-              <img src="/videocall.jpg" alt="Language connection illustration" className="w-full h-full" />
+              <img src="/videocall.jpg" alt="Language connection illustration" className="w-full h-full object-cover rounded-md" />
             </div>
             <div className="text-center space-y-3 mt-6">
               <h2 className="text-xl font-semibold">Connect with language partners worldwide</h2>

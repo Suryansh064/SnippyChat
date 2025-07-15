@@ -1,57 +1,39 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+const api = axios.create({
+  baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
+  withCredentials: true,
+});
+
 export const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(() => localStorage.getItem("token"));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/me`,
-          {
-            withCredentials: true,
-          }
-        );
+        const res = await api.get("/api/auth/me");
         setUser(res.data.user);
       } catch (err) {
         console.error("Auth fetch error:", err);
-        logout();
+        setUser(null);
       } finally {
         setLoading(false);
       }
     };
 
     fetchUser();
-  }, [token]);
+  }, []);
 
   const login = async (email, password) => {
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/login`,
-        { email, password },
-        { withCredentials: true }
-      );
-
-      const { user, token } = res.data;
-      if (user && token) {
-        setUser(user);
-        setToken(token);
-        localStorage.setItem("token", token);
-        return { success: true };
-      } else {
-        return { success: false, error: "Invalid response from server." };
-      }
+      const res = await api.post("/api/auth/login", { email, password });
+      setUser(res.data.user);
+      return { success: true };
     } catch (err) {
-      console.error("Login error:", err);
       return {
         success: false,
         error: err?.response?.data?.message || "Login failed. Please try again.",
@@ -61,21 +43,9 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (fullName, email, password) => {
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/signup`,
-        { fullName, email, password },
-        { withCredentials: true }
-      );
-
-      const { user, token } = res.data;
-      if (user && token) {
-        setUser(user);
-        setToken(token);
-        localStorage.setItem("token", token);
-        return { success: true };
-      } else {
-        return { success: false, error: "Invalid signup response from server." };
-      }
+      const res = await api.post("/api/auth/signup", { fullName, email, password });
+      setUser(res.data.user);
+      return { success: true };
     } catch (err) {
       return {
         success: false,
@@ -86,17 +56,11 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(
-        `${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/logout`,
-        {},
-        { withCredentials: true }
-      );
+      await api.post("/api/auth/logout");
     } catch (err) {
-      console.error("Logout API error:", err.message);
+      console.error("Logout error:", err.message);
     } finally {
       setUser(null);
-      setToken(null);
-      localStorage.removeItem("token");
     }
   };
 
@@ -104,7 +68,6 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
-        token,
         login,
         logout,
         signup,

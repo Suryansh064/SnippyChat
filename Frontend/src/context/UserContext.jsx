@@ -1,12 +1,17 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth } from "./AuthContext"; // ✅ Correct import
+import { useAuth } from "./AuthContext";
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
+  withCredentials: true,
+});
 
 const UserContext = createContext();
 export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
-  const { token, user } = useAuth();
+  const { user } = useAuth();
 
   const [friends, setFriends] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
@@ -14,61 +19,39 @@ export const UserProvider = ({ children }) => {
   const [sentRequests, setSentRequests] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const axiosConfig = {
-    withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-
-  //  Fetch all users
   const fetchUsers = async () => {
+    setLoading(true);
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_BASE_URL}/api/user`,
-        axiosConfig
-      );
+      const res = await api.get("/api/user");
       setAllUsers(res.data);
     } catch (err) {
       console.error("Failed to fetch users:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  //  Fetch friend list
   const fetchFriends = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_BASE_URL}/api/user/friends`,
-        axiosConfig
-      );
+      const res = await api.get("/api/user/friends");
       setFriends(res.data);
     } catch (err) {
       console.error("Failed to fetch friends:", err);
     }
   };
 
-  //  Send a friend request
   const sendFriendRequest = async (id) => {
     try {
-      await axios.post(
-        `${import.meta.env.VITE_BACKEND_BASE_URL}/api/user/friend-req/${id}`,
-        {},
-        axiosConfig
-      );
-      getSentRequests(); // Refresh sent list
+      await api.post(`/api/user/friend-req/${id}`);
+      getSentRequests();
     } catch (err) {
       console.error("Send request error:", err);
     }
   };
 
-  //  Accept a friend request
   const acceptFriendRequest = async (id) => {
     try {
-      await axios.put(
-        `${import.meta.env.VITE_BACKEND_BASE_URL}/api/user/friend-req/${id}/accept`,
-        {},
-        axiosConfig
-      );
+      await api.put(`/api/user/friend-req/${id}/accept`);
       fetchFriends();
       getReceivedRequests();
     } catch (err) {
@@ -76,40 +59,27 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  //  Get received friend requests
   const getReceivedRequests = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_BASE_URL}/api/user/friend-req`,
-        axiosConfig
-      );
+      const res = await api.get("/api/user/friend-req");
       setReceivedRequests(res.data);
     } catch (err) {
       console.error("Get received requests error:", err);
     }
   };
 
-  //  Get sent friend requests
   const getSentRequests = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_BASE_URL}/api/user/send-friend-req`,
-        axiosConfig
-      );
+      const res = await api.get("/api/user/send-friend-req");
       setSentRequests(res.data);
     } catch (err) {
       console.error("Get sent requests error:", err);
     }
   };
 
-  //  Onboarding profile
-  const onBoard = async (data) => {
+  const onboard = async (data) => {
     try {
-      await axios.post(
-        `${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/onBoard`,
-        data,
-        { withCredentials: true }
-      );
+      await api.post("/api/auth/onBoard", data);
       return { success: true };
     } catch (err) {
       return {
@@ -119,15 +89,14 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  //  Auto-fetch when logged in
   useEffect(() => {
-    if (token) {
+    if (user?._id) {
       fetchUsers();
       fetchFriends();
       getReceivedRequests();
       getSentRequests();
     }
-  }, [token]);
+  }, [user]);
 
   return (
     <UserContext.Provider
@@ -142,7 +111,7 @@ export const UserProvider = ({ children }) => {
         acceptFriendRequest,
         getReceivedRequests,
         getSentRequests,
-        onBoard,
+        onboard,
         loading,
       }}
     >

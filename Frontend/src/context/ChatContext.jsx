@@ -1,6 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth } from "./AuthContext"; // ✅ make sure this is correct
+import { useAuth } from "./AuthContext";
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
+  withCredentials: true,
+});
 
 const ChatContext = createContext();
 export const useChat = () => useContext(ChatContext);
@@ -12,14 +17,14 @@ export const ChatProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchChatToken = async () => {
-      if (!user?._id) return;
+      if (!user?._id) {
+        setLoading(false);
+        return;
+      }
 
       setLoading(true);
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_BASE_URL}/api/chat/token`,
-          { withCredentials: true }
-        );
+        const res = await api.get("/api/chat/token");
         setChatToken(res.data.token);
       } catch (err) {
         console.error("Failed to fetch chat token:", err);

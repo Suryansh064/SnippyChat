@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    // origin: ["http://localhost:5173", "https://snippychat-backend.onrender.com"],
+    // origin: "http://localhost:5173",
     origin: "https://snippychat-ohv0.onrender.com",
     credentials: true
 }));
