@@ -10,7 +10,7 @@ import Call from "./Pages/Call";
 import OnBoard from "./Pages/OnBoard";
 import Notification from "./Pages/Notification";
 import Layout from "./components/Layout";
-
+import AiChatPage from "./Pages/AiChatPage";
 function App() {
   const { user, loading } = useAuth();
 
@@ -36,6 +36,7 @@ function App() {
           <Route path="/login" element={<Navigate to="/" replace />} />
           <Route path="/signup" element={<Navigate to="/" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/aiChat/:id" element={<AiChatPage />} />
         </>
       )}
     </Routes>
