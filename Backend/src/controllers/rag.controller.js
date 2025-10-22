@@ -1,5 +1,5 @@
 // // controllers/rag.controller.js
-import { queryPineconeAndAnswer } from '../utils/ragquery.js';
+import { queryPineconeAndAnswer } from '../utils/ragQuery.js';
 
 export const askFromPdf = async (req, res) => {
 try {
