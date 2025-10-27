@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { UsersIcon } from "lucide-react";
 import useHomeData from "../hooks/UseHome";
-import { FriendCard, SectionHeader } from "../components/HomeCard";
+import { FriendCard, SectionHeader,AIFriendCard } from "../components/HomeCard";
 import RecommendedUserCard from "../components/RecommendUser";
 
 const Home = () => {
@@ -34,16 +34,30 @@ const Home = () => {
             <div className="flex justify-center py-10">
               <span className="loading loading-spinner loading-lg text-primary" />
             </div>
-          ) : friends.length === 0 ? (
+          ) : friends.length === -1 ? (
             <div className="text-center py-10">
               <h3 className="text-lg font-semibold">No friends yet</h3>
               <p className="text-base-content/70">You haven’t connected with anyone yet.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-              {friends.map(friend => (
-                <FriendCard key={friend._id} friend={friend} />
-              ))}
+            <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-15">
+                <AIFriendCard />
+
+                {/* Render all user friends */}
+                {friends.length > 0 ? (
+                  friends.map((friend) => (
+                    <FriendCard key={friend._id} friend={friend} />
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-10">
+                    <h3 className="text-lg font-semibold">No friends yet</h3>
+                    <p className="text-base-content/70">
+                      You haven’t connected with anyone yet.
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
